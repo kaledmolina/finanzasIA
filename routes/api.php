@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\CategoryController;
 use App\Http\Controllers\API\V1\TransactionController;
 use App\Http\Controllers\API\AuthenticationController;
+use App\Http\Controllers\API\V1\DashboardController; // <-- Asegúrate de que esta línea exista
 
 // --------------- Rutas Públicas v1 --------------- //
 Route::prefix('v1')->group(function () {
@@ -30,6 +31,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // Autenticación
     Route::post('logout', [AuthenticationController::class, 'logOut'])->name('logout');
+
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index']); // <-- Y que esta línea esté aquí
 
     // Recursos
     Route::apiResource('categories', CategoryController::class);
