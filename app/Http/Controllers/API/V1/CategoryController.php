@@ -9,24 +9,33 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    /**
+     * Devuelve las categorías del usuario autenticado.
+     */
     public function index(Request $request)
     {
         $categories = $request->user()->categories()->get();
         return CategoryResource::collection($categories);
     }
 
+    /**
+     * Almacena una nueva categoría.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:ingreso,gasto',
-            'expense_type' => 'nullable|in:básico,lujo,ahorro',
+            'type' => ['required', Rule::in(['ingreso', 'gasto'])],
+            'expense_type' => ['nullable', Rule::in(['básico', 'lujo', 'ahorro'])],
         ]);
+
+        // Si es un ingreso, asegurar que expense_type sea null
+        if ($validated['type'] === 'ingreso') {
+            $validated['expense_type'] = null;
+        }
 
         $category = $request->user()->categories()->create($validated);
 
-        return new CategoryResource($category);
+        return response()->json(new CategoryResource($category), 201);
     }
-    
-    // ... (Los métodos show, update, destroy se pueden implementar de forma similar)
 }
