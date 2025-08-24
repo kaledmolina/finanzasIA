@@ -11,7 +11,8 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        return CategoryResource::collection($request->user()->categories);
+        $categories = $request->user()->categories()->get();
+        return CategoryResource::collection($categories);
     }
 
     public function store(Request $request)
