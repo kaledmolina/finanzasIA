@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\CategoryController;
 use App\Http\Controllers\API\V1\TransactionController;
 use App\Http\Controllers\API\AuthenticationController;
-use App\Http\Controllers\API\V1\DashboardController; // <-- Asegúrate de que esta línea exista
+use App\Http\Controllers\API\V1\DashboardController;
 
 // --------------- Rutas Públicas v1 --------------- //
 Route::prefix('v1')->group(function () {
@@ -33,7 +33,11 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('logout', [AuthenticationController::class, 'logOut'])->name('logout');
 
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index']); // <-- Y que esta línea esté aquí
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+
+    // --- NUEVAS RUTAS PARA SUGERENCIAS ---
+    Route::get('/categories/suggestions', [CategoryController::class, 'getSuggestions']);
+    Route::post('/categories/suggestions', [CategoryController::class, 'storeSuggestions']);
 
     // Recursos
     Route::apiResource('categories', CategoryController::class);
